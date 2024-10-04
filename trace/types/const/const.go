@@ -3,11 +3,11 @@ package _const
 import _errors "github.com/04Akaps/gateway_with_kafka.git/trace/types/error"
 
 const (
-	SucscriptionReport = "trace-data"
+	Report = "report-data"
 )
 
 var topics = map[string]bool{
-	SucscriptionReport: true,
+	Report: true,
 }
 
 func IsSupportedTopic(topic string) error {
