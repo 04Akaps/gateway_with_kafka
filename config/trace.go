@@ -20,8 +20,6 @@ type TraceCfg struct {
 	}
 
 	ServiceInfo struct {
-		ServiceID      string
 		WorkChanLength int64
-		Port           string
 	}
 }

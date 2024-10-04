@@ -10,9 +10,14 @@ type GatewayCfg struct {
 		Collections map[string]string
 	}
 
+	Redis struct {
+		DataSource string
+		DB         int
+		Password   string
+		UserName   string
+	}
+
 	ServiceInfo struct {
-		ServiceID      string
-		WorkChanLength int64
-		Port           string
+		Port string
 	}
 }
