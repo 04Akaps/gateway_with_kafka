@@ -50,9 +50,9 @@ func (s *ReportHandler) handleReport(value []byte, msg *_kafka.Message) {
 		ID := event.Request.ID
 
 		if v, ok := eventMapper[ID]; !ok {
-			eventMapper[ID] = getSubscriptionReportWhenIDNotFound(event)
+			eventMapper[ID] = getReportWhenIDNotFound(event)
 		} else {
-			eventMapper[ID] = getSubscriptionReportWhenIDFounded(v, event)
+			eventMapper[ID] = getReportWhenIDFounded(v, event)
 		}
 
 	}
@@ -71,7 +71,7 @@ func (s *ReportHandler) handleReport(value []byte, msg *_kafka.Message) {
 	})
 
 	if err != nil {
-		log.Println("Failed to handle subscription report event", "err", err)
+		log.Println("Failed to handle report event", "err", err)
 	}
 }
 
@@ -84,7 +84,7 @@ func (s *ReportHandler) updateDatabase(tx db.Session, mapper map[string]*_report
 
 	affected, _ := dbResult.RowsAffected()
 
-	log.Println("Success update subscription report in handler", "totalMappers", len(mapper), "affected", affected)
+	log.Println("Success update report in handler", "totalMappers", len(mapper), "affected", affected)
 
 	return nil
 }
@@ -101,7 +101,7 @@ func (s *ReportHandler) commitOffsets(msg *_kafka.Message) error {
 	return nil
 }
 
-func getSubscriptionReportWhenIDNotFound(event *types.TraceEvent) *_report.Report {
+func getReportWhenIDNotFound(event *types.TraceEvent) *_report.Report {
 	report := &_report.Report{
 		ID:        event.Request.ID,
 		Timestamp: getTimestamp(event.StartTime),
@@ -113,7 +113,7 @@ func getSubscriptionReportWhenIDNotFound(event *types.TraceEvent) *_report.Repor
 	return report
 }
 
-func getSubscriptionReportWhenIDFounded(v *_report.Report, event *types.TraceEvent) *_report.Report {
+func getReportWhenIDFounded(v *_report.Report, event *types.TraceEvent) *_report.Report {
 	v.Timestamp = getTimestamp(event.StartTime)
 	v.CallCountTotal, v.CallCountSuccess, v.CallCountFailed, v.CallCountOther, v.CallCountBlocked, v.ApiTimeTotal = calcCallCount(v, event)
 	return v
@@ -123,7 +123,7 @@ func getSubscriptionReportWhenIDFounded(v *_report.Report, event *types.TraceEve
 // Calculation of callCount through this document.
 // https://learn.microsoft.com/en-us/rest/api/apimanagement/reports/list-by-api?view=rest-apimanagement-2024-05-01&tabs=HTTP#reportrecordcontract
 func calcCallCount(v *_report.Report, event *types.TraceEvent) (callTotal, success, failed, other, blocked, apiTimeTotal int64) {
-	// handleSubscriptionReport 해당 함수에서 Lock을 제어하고 있기 떄문에, Atomic은 굳이 필요가 없다.
+	// handleReport 해당 함수에서 Lock을 제어하고 있기 떄문에, Atomic은 굳이 필요가 없다.
 	callTotal, success, failed, other, blocked, apiTimeTotal = v.CallCountTotal, v.CallCountSuccess, v.CallCountFailed, v.CallCountOther, v.CallCountBlocked, v.ApiTimeTotal
 
 	callTotal++

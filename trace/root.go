@@ -2,10 +2,10 @@ package trace
 
 import (
 	"github.com/04Akaps/gateway_with_kafka.git/config"
-	"github.com/04Akaps/gateway_with_kafka.git/global"
+	"github.com/04Akaps/gateway_with_kafka.git/trace/app"
 )
 
 func NewTraceModule(cfg config.TraceCfg) {
-
-	global.InitializeWork.Done()
+	app := app.NewApp(cfg)
+	app.Run()
 }

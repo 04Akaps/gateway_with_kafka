@@ -27,7 +27,7 @@ func NewMySQLService(sql *mysql.MySQL) MySQLImpl {
 }
 
 func (m *mysqlService) UpdateReportUsingBulkWithTx(tx db.Session, eventMapper map[string]*_report.Report) (sql.Result, error) {
-	impl := m.SQL.GetSubscriptionReport()
+	impl := m.SQL.GetReport()
 
 	if res, err := impl.UpdateReportUsingBulkWithTx(tx, eventMapper); err != nil {
 		return nil, err
@@ -38,6 +38,6 @@ func (m *mysqlService) UpdateReportUsingBulkWithTx(tx db.Session, eventMapper ma
 
 // TxContext(fn func(sess db.Session) error) error
 func (m *mysqlService) TxContext(fn func(sess db.Session) error) error {
-	impl := m.SQL.GetSubscriptionReport()
+	impl := m.SQL.GetReport()
 	return impl.TxContext(fn)
 }

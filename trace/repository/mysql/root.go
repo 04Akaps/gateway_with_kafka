@@ -16,8 +16,8 @@ type MySQL struct {
 
 	cfg config.TraceCfg
 
-	subscriptionReport report.ReportImpl
-	utils              utils.SqlUtils
+	report report.ReportImpl
+	utils  utils.SqlUtils
 }
 
 func NewMySQL(config config.TraceCfg) (*MySQL, error) {
@@ -44,12 +44,12 @@ func NewMySQL(config config.TraceCfg) (*MySQL, error) {
 	} else {
 		sql.utils = utils.NewSqlUtils()
 
-		sql.subscriptionReport = report.NewReport(sql.sess.Collection(cfg.Collections["Report"]), sql.utils)
+		sql.report = report.NewReport(sql.sess.Collection(cfg.Collections["Report"]), sql.utils)
 	}
 
 	return sql, nil
 }
 
-func (m *MySQL) GetSubscriptionReport() report.ReportImpl {
-	return m.subscriptionReport
+func (m *MySQL) GetReport() report.ReportImpl {
+	return m.report
 }

@@ -7,7 +7,7 @@ import (
 
 const (
 	seReportBulk = "" +
-		"INSERT INTO subscription_report (%s) VALUES%s " +
+		"INSERT INTO report (%s) VALUES%s " +
 		"ON DUPLICATE KEY UPDATE " +
 		"api_time_total = api_time_total + VALUES(api_time_total)," +
 		"call_count_total = call_count_total + VALUES(call_count_total)," +
